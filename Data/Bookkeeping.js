@@ -35,11 +35,11 @@ const authenticateToken = (req, res, next) => {
 
 // User registration
 app.post('/register', async (req, res) => {
-  const { email, password, firstname, lastname } = req.body
+  const { email, password, name, phone } = req.body
   const hashedPassword = await bcrypt.hash(password, 10)
-  const query = 'INSERT INTO users (email, password, firstname, lastname) VALUES (?, ?, ?, ?)'
+  const query = 'INSERT INTO users (email, password, name, phone) VALUES (?, ?, ?, ?)'
 
-  db.query(query, [email, hashedPassword, firstname, lastname], (err) => {
+  db.query(query, [email, hashedPassword, name, phone], (err) => {
     if (err) {
       return res.status(500).send('Error registering user')
     }

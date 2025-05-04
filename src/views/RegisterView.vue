@@ -1,7 +1,3 @@
-<script setup>
-
-</script>
-
 <template>
 
   <body>
@@ -10,37 +6,37 @@
         <div class="w-100" style="max-width: 350px; margin: auto">
           <p class="create text-center text-muted" style="font-family: Times New Roman, Times, serif;">Create Account
           </p>
+          <form @submit.prevent="handleRegister">
+            <!-- Name -->
+            <div class="mb-3 position-relative">
+              <i class="bi bi-person position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+              <input type="text" class="form-control ps-5 border rounded" v-model="name" placeholder="Name" />
+            </div>
 
-          <!-- Name -->
-          <div class="mb-3 position-relative">
-            <i class="bi bi-person position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-            <input type="text" class="form-control ps-5 border rounded" placeholder="Name" />
-          </div>
+            <!-- Email -->
+            <div class="mb-3 position-relative">
+              <i class="bi bi-envelope position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+              <input type="text" class="form-control ps-5 border rounded" v-model="email" placeholder="Email" />
+            </div>
 
-          <!-- Email -->
-          <div class="mb-3 position-relative">
-            <i class="bi bi-envelope position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-            <input type="text" class="form-control ps-5 border rounded" placeholder="Email" />
-          </div>
+            <!-- Password -->
+            <div class="mb-3 position-relative">
+              <i class="bi bi-lock position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+              <input type="password" class="form-control ps-5 border rounded" v-model="password"
+                placeholder="Password" />
+            </div>
 
-          <!-- Password -->
-          <div class="mb-3 position-relative">
-            <i class="bi bi-lock position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-            <input type="password" class="form-control ps-5 border rounded" placeholder="Password" />
-          </div>
+            <!-- Phone -->
+            <div class="mb-3 position-relative">
+              <i class="bi bi-telephone position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+              <input type="tel" class="form-control ps-5 border rounded" v-model="phone" placeholder="Phone number" />
+            </div>
 
-          <!-- Phone -->
-          <div class="mb-3 position-relative">
-            <i class="bi bi-telephone position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-            <input type="tel" class="form-control ps-5 border rounded" placeholder="Phone number" />
-          </div>
-
-
-
-          <div class="d-grid mt-3">
-            <button class="btn btn-signin" style="font-family: Times New Roman, Times, serif;">Register</button>
-          </div>
-
+            <div class="d-grid mt-3">
+              <button class="btn btn-signin" style="font-family: Times New Roman, Times, serif;"
+                type="submit">Register</button>
+            </div>
+          </form>
           <div class="text-center my-3 text-muted" style="font-family: Times New Roman, Times, serif;">or</div>
 
           <p class="text-center link"> If you already have an account
@@ -56,6 +52,40 @@
     </div>
   </body>
 </template>
+
+<script setup>
+
+import axios from 'axios';
+import { ref } from 'vue';
+import { errorMessages } from 'vue/compiler-sfc';
+
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const phone = ref('');
+
+const handleRegister = async () => {
+  try {
+    const response = await axios.post('https://example.com/api/register', {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      phone: phone.value
+    });
+    localStorage.setItem('token', response.data.token);
+    this.$router.push('/login');
+    errorMessages.value = '';
+  } catch (error) {
+    if (error.response && error.response.status === 400) {
+      errorMessages.value = 'Invalid input data';
+    } else {
+      errorMessages.value = 'An error occurred. Please try again.';
+    }
+  }
+};
+
+</script>
+
 
 <style scoped>
 body,

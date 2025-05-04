@@ -11,8 +11,6 @@
           <p class="create text-center text-muted" style="font-family: Times New Roman, Times, serif;">Create Account
           </p>
 
-          <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
-
           <!-- Name -->
           <div class="mb-3 position-relative">
             <i class="bi bi-person position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>

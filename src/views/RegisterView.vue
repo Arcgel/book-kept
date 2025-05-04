@@ -46,7 +46,8 @@
           <div class="text-center my-3 text-muted" style="font-family: Times New Roman, Times, serif;">or</div>
 
           <p class="text-center link"> If you already have an account
-            <a href="#" class="sign-in" style="font-family: Times New Roman, Times, serif;">Sign in</a>
+            <a href="#" class="sign-in" style="font-family: Times New Roman, Times, serif;"
+              @click="$router.push('/login')">Sign in</a>
           </p>
         </div>
       </div>

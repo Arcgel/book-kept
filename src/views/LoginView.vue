@@ -28,7 +28,7 @@
         <div class="text-center my-3 text-muted">or</div>
 
         <p class="text-center link">Don't have an account yet?
-          <a href="#" class="create">Create Account</a>
+          <a href="#" class="create" @click="$router.push('/register')">Create Account</a>
         </p>
       </div>
     </div>
@@ -39,6 +39,13 @@
 </script>
 
 <style scoped>
+body,
+html {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f7f7f7;
+}
+
 .auth-container {
   max-width: 900px;
   margin: 50px auto;
@@ -75,11 +82,15 @@
 }
 
 .form-control {
+  /* border: none; */
   border-bottom: 1px solid #e7e0e0;
   border-radius: 5px;
   margin-bottom: 15px;
+  font-family: "Times New Roman", Times, serif;
+  box-shadow: none;
   text-align: left;
 }
+
 
 .link {
   font-size: 0.9rem;
@@ -89,6 +100,7 @@
   border-color: #ccc;
   box-shadow: none;
   outline: none;
+
 }
 
 .create {

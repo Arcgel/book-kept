@@ -39,7 +39,7 @@
           </form>
           <div class="text-center my-3 text-muted" style="font-family: Times New Roman, Times, serif;">or</div>
 
-          <p class="text-center link"> If you already have an account
+          <p class="text-center link" style="font-family:'Times New Roman', Times, serif;">  If you already have an account
             <a href="#" class="sign-in" style="font-family: Times New Roman, Times, serif;"
               @click="$router.push('/login')">Sign in</a>
           </p>
@@ -110,9 +110,9 @@ html {
 }
 
 .auth-container {
-  max-width: 800px;
+  max-width: 700px;
   height: 490px;
-  margin: 200px auto;
+  margin: 50px auto;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);

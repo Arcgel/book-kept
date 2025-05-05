@@ -27,8 +27,8 @@
 
           <div class="text-center my-3 text-muted">or</div>
 
-          <p class="text-center link">Don't have an account yet?
-            <a href="#" class="create" @click="$router.push('/register')">Create Account</a>
+          <p class="text-left link" style="font-family: 'Times New Roman', Times, serif;">Don't have an account yet?
+            <a href="#" class="create" @click="$router.push('/register')" style="font-family:'Times New Roman', Times, serif">Create Account</a>
           </p>
         </form>
       </div>

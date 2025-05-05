@@ -54,15 +54,16 @@
 </template>
 
 <script setup>
-
 import axios from 'axios';
 import { ref } from 'vue';
-import { errorMessages } from 'vue/compiler-sfc';
+import { useRouter } from 'vue-router';
 
+const router = useRouter(); // Vue Router instance
 const name = ref('');
 const email = ref('');
 const password = ref('');
 const phone = ref('');
+const errorMessages = ref('');
 
 const handleRegister = async () => {
   try {
@@ -72,17 +73,31 @@ const handleRegister = async () => {
       password: password.value,
       phone: phone.value
     });
-    this.$router.push('/login');
+
     errorMessages.value = '';
+    router.push('/login'); // Corrected routing method
+
   } catch (error) {
-    if (error.response && error.response.status === 400) {
-      errorMessages.value = 'Invalid input data';
+    if (error.response) {
+      switch (error.response.status) {
+        case 400:
+          errorMessages.value = 'Invalid input data. Please check your entries.';
+          break;
+        case 401:
+          errorMessages.value = 'Unauthorized access. Redirecting to login...';
+          router.push('/login'); // Redirect user immediately
+          break;
+        case 409:
+          errorMessages.value = 'This email is already registered. Try logging in instead.';
+          break;
+        default:
+          errorMessages.value = 'An unexpected error occurred. Please try again later.';
+      }
     } else {
-      errorMessages.value = 'An error occurred. Please try again.';
+      errorMessages.value = 'Network error. Please check your internet connection.';
     }
   }
 };
-
 </script>
 
 

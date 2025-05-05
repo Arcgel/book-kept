@@ -37,15 +37,14 @@
 </template>
 
 <script setup>
-
 import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { errorMessages } from 'vue/compiler-sfc';
 
+const router = useRouter(); // Corrected router instance
 const email = ref('');
 const password = ref('');
-
+const errorMessages = ref('');
 
 const handleLogin = async () => {
   try {
@@ -53,15 +52,25 @@ const handleLogin = async () => {
       email: email.value,
       password: password.value
     });
+
     localStorage.setItem('token', response.data.token);
-    router.push('/');
     errorMessages.value = '';
+    router.push('/'); // Redirects after successful login
 
   } catch (error) {
-    if (error.response && error.response.status === 401) {
-      errorMessages.value = 'Invalid email or password';
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          errorMessages.value = 'Invalid email or password. Please try again.';
+          break;
+        case 403:
+          errorMessages.value = 'Access forbidden. Please contact support.';
+          break;
+        default:
+          errorMessages.value = 'An unexpected error occurred. Please try again later.';
+      }
     } else {
-      errorMessages.value = 'An error occurr  ed. Please try again later.';
+      errorMessages.value = 'Network error. Please check your connection.';
     }
   }
 };

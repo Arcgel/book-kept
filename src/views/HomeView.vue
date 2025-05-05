@@ -117,7 +117,7 @@
           <h2 class="mb-3 fs-4 text-dark" style="font-family: 'Times New Roman', Times, serif;" >New Releases</h2>
           <div class="row d-flex flex-wrap gap-4 justify-content-start">
             <div class="col-6 col-md-2" v-for="book in books" :key="book.book_id">
-              <div class="card border-2 shadow-sm" style="width: 200px;">
+              <div class="card border-2 shadow-sm" style="width: 200px;"  @click=opnBookView(book)>
                 <img :src="book.image" :alt="book.title" class="card-img-top"
                   style="height: 200px; object-fit: cover;" />
                 <div class="card-body">
@@ -159,7 +159,9 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const isSidebarExpanded = ref(false);
 const searchQuery = ref("");
 
@@ -234,9 +236,9 @@ const books = ref([
     book_description: "A classic novel of manners and marriage.",
     image: "/src/assets/images/H.J.jpg"
   },
-  
 
-  
+
+
 ]);
 
 const toggleSidebar = () => {
@@ -250,6 +252,10 @@ const nextSlide = () => {
 const prevSlide = () => {
   console.log('Previous slide clicked');
   currentIndex.value = (currentIndex.value - 1 + featuredImages.value.length) % featuredImages.value.length;
+};
+
+const opnBookView= (book) => {
+  router.push({ name: "BookView", params: { bookData: JSON.stringify(book)}})
 };
 
 </script>

@@ -9,13 +9,10 @@
     <div class="right-panel">
       <h2 class="product-title">{{ book.title }}</h2>
       <p class="price">${{ book.price }}</p>
-      <p class="product-desc">by {{ book.Author }}</p>
+      <p class="product-desc">by {{ book.author }}</p>
 
       <div class="quantity-cart">
-        <button>-</button>
-        <span>1</span>
-        <button>+</button>
-        <button class="add-to-cart">Add to cart</button>
+        <button class="add-to-cart" @click="addToCart">Add to cart</button>
         <button class="icon-btn"><i class="fas fa-heart"></i></button>
       </div>
 
@@ -27,80 +24,42 @@
 
       <div class="tab-content">
         <p>
-          This captivating book takes readers on an emotional journey filled with unexpected twists and heartfelt moments.
-          At its core, it explores themes of love, loss, and the resilience of the human spirit.
-          The protagonist faces numerous challenges that test their strength and character.
-          Along the way, unforgettable friendships are formed and deeply moving revelations come to light.
-          The author masterfully weaves a narrative that balances suspense with tender reflection.
-          Each chapter leaves the reader yearning to uncover what happens next.
-          Vivid descriptions and rich storytelling bring every scene to life.
-          The characters are complex, relatable, and undergo significant development throughout the story.
-          By the final page, the reader is left with a lasting impression and a deeper understanding of life’s complexities.
-          This book is a must-read for anyone who enjoys a compelling and thought-provoking story.
+          {{ book.book_description }}
         </p>
       </div>
     </div>
   </div>
 
-  <!-- 📚 Recommended Books Section -->
-  <div class="recommend-section">
-    <h3 class="recommend-title">
-      Readers also enjoyed
-      <!-- <a href="#" class="see-all">See all</a> -->
-    </h3>
-    <div class="recommend-list">
-      <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="Hell University" />
-        <a href="#" class="book-title">Hell University</a>
-        <p class="author">KnightInBlack</p>
-       
-      </div>
 
-      <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="Hopeless Romantic" />
-        <a href="#" class="book-title">Hopeless Romantic</a>
-        <p class="author">Strawberry</p>
-    
-      </div>
-
-      <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="He's Into Her" />
-        <a href="#" class="book-title">He's into her</a>
-        <p class="author">Maxinejiji</p>
-      
-      </div>
-
-      <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="Ang Mutya" />
-        <a href="#" class="book-title">Ang Mutya ng Section E, Part 3</a>
-        <p class="author">Eatmore2behappy</p>
-        
-      </div>
-
-      <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="Ang Mutya" />
-        <a href="#" class="book-title">Ang Mutya ng Section E, Part 3</a>
-        <p class="author">Eatmore2behappy</p>
-       
-      </div>
-
-          <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="Ang Mutya" />
-        <a href="#" class="book-title">Ang Mutya ng Section E, Part 3</a>
-        <p class="author">Eatmore2behappy</p>
-   
-      </div>
-    </div>
-  </div>
 </template>
 
 
 <script setup>
 import { useRoute } from "vue-router";
 import { ref } from "vue";
+import axios from "axios";
 
 const route = useRoute();
 const book = ref(JSON.parse(route.params.bookData));
+
+const addToCart = async () => {
+  try {
+    const token = localStorage.getItem("token"); // Retrieve JWT token from localStorage
+    if (!token) {
+      alert("Please log in first.");
+      return;
+    }
+    const response = await axios.post(
+      "http://localhost:3000/add-to-cart",
+      { book_id: book.value.book_id },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    alert(response.data.message);
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+    alert("Failed to add book to cart.");
+  }
+};
 </script>
 
 <style scoped>
@@ -117,12 +76,13 @@ body {
   display: flex;
   min-height: 100vh;
 }
+
 .product-page {
   display: flex;
-  align-items: center; 
-  justify-content: center; 
+  align-items: center;
+  justify-content: center;
   min-height: 100vh;
-  gap: 2rem; 
+  gap: 2rem;
 }
 
 
@@ -133,7 +93,8 @@ body {
   align-items: center;
   justify-content: center;
 }
-.tab-content{
+
+.tab-content {
   text-align: justify;
 
 }
@@ -141,23 +102,26 @@ body {
 
 .image-area {
   width: 100%;
-  text-align: left; 
+  text-align: left;
 }
 
 .image-area img {
-  width: 104%; 
+  width: 104%;
   height: 460px;
   border-radius: 4px;
   transition: transform .2s;
   margin-bottom: 30%;
 }
+
 .image-area :hover {
   transform: scale(1.1);
 }
+
 .right-panel {
   width: 50%;
   padding: 2.5rem;
 }
+
 .product-title {
   font-size: 1.5rem;
   font-weight: 700;
@@ -231,25 +195,28 @@ body {
   color: white;
 }
 
-.tab-content {    
+.tab-content {
   font-size: 1rem;
   font-family: 'Times New Roman', Times, serif;
   color: #0c0808;
   line-height: 1.6;
-  
+
 }
-.tab-content p{    
+
+.tab-content p {
   font-family: 'Times New Roman', Times, serif;
 
 }
+
 .recommend-section {
   padding: 2rem 4%;
   margin-top: 5px;
-  
+
   /* background-color: #ffffff; */
 }
-.recommend-list{
-margin-left: 10%;
+
+.recommend-list {
+  margin-left: 10%;
 }
 
 .recommend-title {
@@ -275,7 +242,7 @@ margin-left: 10%;
 }
 
 .recommend-card {
-  background:    rgb(238, 234, 234);
+  background: rgb(238, 234, 234);
   /* border :1px solid; */
   border-radius: 8px;
   padding: 0.5rem;
@@ -291,11 +258,12 @@ margin-left: 10%;
   border-radius: 4px;
   margin-bottom: 0.5rem;
 }
-.recommend-card img:hover{
+
+.recommend-card img:hover {
   transform: scale(1.05);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   border: 1px solid black;
-    }
+}
 
 
 .book-title {
@@ -315,4 +283,4 @@ margin-left: 10%;
   font-size: 0.85rem;
   color: #f39c12;
 }
-  </style>
+</style>

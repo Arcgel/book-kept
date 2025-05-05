@@ -72,7 +72,7 @@
 
       <!-- Tab Navigation -->
       <div class="container">
-        <div class="navbar bg-body-secondary p-2 mb-4 rounded  gap-3 justify-content-center" >
+        <div class="navbar bg-body-secondary p-2 mb-4 rounded  gap-3 justify-content-center">
           <button class="btn btn-sm">Home</button>
           <button class="btn btn-sm">Newer Release</button>
           <button class="btn btn-sm">Top Selling</button>
@@ -83,13 +83,14 @@
         <!-- Featured & Recommended Section -->
         <div class="recommended mt-4">
           <h2 class="mb-3 fs-4 text-dark">Featured and Recommended</h2>
-          <div class="featured-recommended bg-dark text-white rounded overflow-hidden d-flex flex-column flex-md-row mb-4 position-relative" style="min-height: 450px;">
+          <div
+            class="featured-recommended bg-dark text-white rounded overflow-hidden d-flex flex-column flex-md-row mb-4 position-relative"
+            style="min-height: 450px;">
             <!-- Left Arrow -->
             <button class="btn btn-light position-absolute top-50 start-0 translate-middle-y"
-  style="opacity: 0.7; z-index: 10;"
-  @click="prevSlide">
-  <i class="bi bi-chevron-left"></i>
-</button>
+              style="opacity: 0.7; z-index: 10;" @click="prevSlide">
+              <i class="bi bi-chevron-left"></i>
+            </button>
 
             <div class="col-md-8 p-0 position-relative">
               <img :src="featuredImages[currentIndex].src" :alt="featuredImages[currentIndex].title" class="w-100"
@@ -107,17 +108,18 @@
             </div>
 
             <!-- Right Arrow -->
-            <button class="btn btn-light position-absolute top-50 end-0 translate-middle-y" style="opacity: 0.7 z-index 10;" @click="nextSlide"> <i class="bi bi-chevron-right"></i>
+            <button class="btn btn-light position-absolute top-50 end-0 translate-middle-y"
+              style="opacity: 0.7 z-index 10;" @click="nextSlide"> <i class="bi bi-chevron-right"></i>
             </button>
           </div>
         </div>
 
         <!-- New Releases Section -->
         <div class="new-releases mt-3">
-          <h2 class="mb-3 fs-4 text-dark" style="font-family: 'Times New Roman', Times, serif;" >New Releases</h2>
+          <h2 class="mb-3 fs-4 text-dark" style="font-family: 'Times New Roman', Times, serif;">New Releases</h2>
           <div class="row d-flex flex-wrap gap-4 justify-content-start">
             <div class="col-6 col-md-2" v-for="book in books" :key="book.book_id">
-              <div class="card border-2 shadow-sm" style="width: 200px;"  @click=opnBookView(book)>
+              <div class="card border-2 shadow-sm" style="width: 200px;" @click=opnBookView(book)>
                 <img :src="book.image" :alt="book.title" class="card-img-top"
                   style="height: 200px; object-fit: cover;" />
                 <div class="card-body">
@@ -133,7 +135,7 @@
 
         <!-- New Releases Section -->
         <div class="new-releases mt-3">
-          <h2 class="mb-3 fs-4 text-dark" style="font-family: 'Times New Roman', Times, serif;" >Best Seller</h2>
+          <h2 class="mb-3 fs-4 text-dark" style="font-family: 'Times New Roman', Times, serif;">Best Seller</h2>
           <div class="row d-flex flex-wrap gap-4 justify-content-start">
             <div class="col-6 col-md-2" v-for="book in books" :key="book.book_id">
               <div class="card border-2 shadow-sm" style="width: 200px;">
@@ -270,14 +272,13 @@ const prevSlide = () => {
   currentIndex.value = (currentIndex.value - 1 + featuredImages.value.length) % featuredImages.value.length;
 };
 
-const opnBookView= (book) => {
-  router.push({ name: "BookView", params: { bookData: JSON.stringify(book)}})
+const opnBookView = (book) => {
+  router.push({ name: "BookView", params: { bookData: JSON.stringify(book) } })
 };
 
 </script>
 
-<style >
-
+<style scoped>
 body {
   font-family: 'Times New Roman', Times, serif;
   margin: 0;
@@ -439,6 +440,7 @@ body {
   cursor: pointer;
   /* margin-right:0px; */
 }
+
 .card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;

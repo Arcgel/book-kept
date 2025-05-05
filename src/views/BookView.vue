@@ -12,7 +12,7 @@
       <p class="product-desc">by {{ book.author }}</p>
 
       <div class="quantity-cart">
-        <button class="add-to-cart">Add to cart</button>
+        <button class="add-to-cart" @click="addToCart">Add to cart</button>
         <button class="icon-btn"><i class="fas fa-heart"></i></button>
       </div>
 
@@ -30,65 +30,36 @@
     </div>
   </div>
 
-  <!-- 📚 Recommended Books Section -->
-  <div class="recommend-section">
-    <h3 class="recommend-title">
-      Readers also enjoyed
-      <!-- <a href="#" class="see-all">See all</a> -->
-    </h3>
-    <div class="recommend-list">
-      <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="Hell University" />
-        <a href="#" class="book-title">Hell University</a>
-        <p class="author">KnightInBlack</p>
 
-      </div>
-
-      <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="Hopeless Romantic" />
-        <a href="#" class="book-title">Hopeless Romantic</a>
-        <p class="author">Strawberry</p>
-
-      </div>
-
-      <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="He's Into Her" />
-        <a href="#" class="book-title">He's into her</a>
-        <p class="author">Maxinejiji</p>
-
-      </div>
-
-      <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="Ang Mutya" />
-        <a href="#" class="book-title">Ang Mutya ng Section E, Part 3</a>
-        <p class="author">Eatmore2behappy</p>
-
-      </div>
-
-      <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="Ang Mutya" />
-        <a href="#" class="book-title">Ang Mutya ng Section E, Part 3</a>
-        <p class="author">Eatmore2behappy</p>
-
-      </div>
-
-      <div class="recommend-card">
-        <img src="/src/assets/images/cupid.jpg" alt="Ang Mutya" />
-        <a href="#" class="book-title">Ang Mutya ng Section E, Part 3</a>
-        <p class="author">Eatmore2behappy</p>
-
-      </div>
-    </div>
-  </div>
 </template>
 
 
 <script setup>
 import { useRoute } from "vue-router";
 import { ref } from "vue";
+import axios from "axios";
 
 const route = useRoute();
 const book = ref(JSON.parse(route.params.bookData));
+
+const addToCart = async () => {
+  try {
+    const token = localStorage.getItem("token"); // Retrieve JWT token from localStorage
+    if (!token) {
+      alert("Please log in first.");
+      return;
+    }
+    const response = await axios.post(
+      "http://localhost:3000/add-to-cart",
+      { book_id: book.value.book_id },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    alert(response.data.message);
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+    alert("Failed to add book to cart.");
+  }
+};
 </script>
 
 <style scoped>

@@ -10,32 +10,70 @@
       <div class="w-100" style="max-width: 350px; margin: auto">
         <h2 class="mb-3 text-center">Library</h2>
         <p class="text-center text-muted">Welcome to the Books Store</p>
+        <form @submit.prevent="handleLogin">
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="text" class="form-control" v-model="email" placeholder="Enter your email" />
+          </div>
 
-        <div class="mb-3">
-          <label class="form-label">Email</label>
-          <input type="text" class="form-control" placeholder="Enter your email" />
-        </div>
+          <div class="mb-2">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" v-model="password" placeholder="Enter your password" />
+          </div>
 
-        <div class="mb-2">
-          <label class="form-label">Password</label>
-          <input type="password" class="form-control" placeholder="Enter your password" />
-        </div>
+          <div class="d-grid mt-3">
+            <button class="btn btn-signin" type="submit">Log in</button>
+          </div>
 
-        <div class="d-grid mt-3">
-          <button class="btn btn-signin">Log in</button>
-        </div>
+          <div class="text-center my-3 text-muted">or</div>
 
-        <div class="text-center my-3 text-muted">or</div>
-
-        <p class="text-center link">Don't have an account yet?
-          <a href="#" class="create" @click="$router.push('/register')">Create Account</a>
-        </p>
+          <p class="text-center link">Don't have an account yet?
+            <a href="#" class="create" @click="$router.push('/register')">Create Account</a>
+          </p>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import axios from 'axios';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter(); // Corrected router instance
+const email = ref('');
+const password = ref('');
+const errorMessages = ref('');
+
+const handleLogin = async () => {
+  try {
+    const response = await axios.post('http://localhost:3000/login', {
+      email: email.value,
+      password: password.value
+    });
+
+    localStorage.setItem('token', response.data.token);
+    errorMessages.value = '';
+    router.push('/'); // Redirects after successful login
+
+  } catch (error) {
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          errorMessages.value = 'Invalid email or password. Please try again.';
+          break;
+        case 403:
+          errorMessages.value = 'Access forbidden. Please contact support.';
+          break;
+        default:
+          errorMessages.value = 'An unexpected error occurred. Please try again later.';
+      }
+    } else {
+      errorMessages.value = 'Network error. Please check your connection.';
+    }
+  }
+};
 </script>
 
 <style scoped>

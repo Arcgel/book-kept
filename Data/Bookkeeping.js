@@ -40,17 +40,30 @@ const authenticateToken = (req, res, next) => {
 
 // User registration
 app.post('/register', async (req, res) => {
-  const { email, password, name, phone } = req.body
-  const hashedPassword = await bcrypt.hash(password, 10)
-  const query = 'INSERT INTO users (email, password, name, phone) VALUES (?, ?, ?, ?)'
+  const { email, password, name, phone } = req.body;
 
-  db.query(query, [email, hashedPassword, name, phone], (err) => {
-    if (err) {
-      return res.status(500).send('Error registering user')
-    }
-    res.status(200).send('User registered successfully')
-  })
-})
+  try {
+      // Get the highest sellerid and increment
+      db.query('SELECT MAX(sellerid) AS lastSellerId FROM users', async (err, result) => {
+          if (err) return res.status(500).json({ message: 'Error fetching last seller ID', error: err.message });
+
+          const lastSellerId = result[0].lastSellerId || 0; // Default to 0 if no records exist
+          const newSellerId = lastSellerId + 1; // Increment the last seller ID
+
+          const hashedPassword = await bcrypt.hash(password, 10);
+          const query = 'INSERT INTO users (sellerid, name, email, password, phone) VALUES (?, ?, ?, ?, ?)';
+
+          db.query(query, [newSellerId, name, email, hashedPassword, phone], (err) => {
+              if (err) return res.status(500).json({ message: 'Error registering user', error: err.message });
+
+              res.status(201).json({ message: 'User registered successfully', sellerid: newSellerId });
+          });
+      });
+
+  } catch (error) {
+      res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+});
 
 // User login
 app.post('/login', (req, res) => {
@@ -143,3 +156,14 @@ app.post('/update-user', authenticateToken, (req, res) => {
 app.get('/verify-token', authenticateToken, (req, res) => {
   res.status(200).json({ userId: req.user.id })
 })
+
+app.get('/books', (req, res) => {
+  db.query('SELECT * FROM books', (err, results) => {
+    if (err) {
+      console.error('Error Fetching Books:', err);
+      res.status(500).send('Server Error');
+      return;
+    }
+    res.json(results); // Send the books data as JSON response
+  });
+});

@@ -40,7 +40,7 @@
             <li>
               <hr class="dropdown-divider" />
             </li>
-            <li><a class="dropdown-item" href="#">Sign in</a></li>
+            <li><a class="dropdown-item" @click="logout">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -186,60 +186,76 @@ const featuredImages = ref([
 const currentIndex = ref(0);
 
 const books = ref([
-  {
-    book_id: 5,
-    seller_id: 1,
-    title: "To Kill a Mockingbird",
-    category: "Classic",
-    Author: "Jessica Cunsolo",
-    price: 30,
-    book_description: "To Kill a Mockingbird is a story",
-    image: "/src/assets/images/ali.jpg"
-  },
-  {
-    book_id: 6,
-    seller_id: 2,
-    title: "1984",
-    category: "Dystopian",
-    Author: "George Orwell",
-    price: 25,
-    book_description: "A chilling prophecy about the future.",
-    image: "/src/assets/images/anna.jpg"
-  },
-  {
-    book_id: 7,
-    seller_id: 3,
-    title: "The Great Gatsby",
-    category: "Classic",
-    Author: "F. Scott Fitzgerald",
-    price: 20,
-    book_description: "A novel about the American dream.",
-    image: "/src/assets/images/blair.jpg"
-  },
-  {
-    book_id: 8,
-    seller_id: 4,
-    title: "The Hobbit",
-    category: "Fantasy",
-    Author: "J.R.R. Tolkien",
-    price: 35,
-    book_description: "A fantasy novel about the journey of Bilbo Baggins.",
-    image: "/src/assets/images/cupid.jpg"
-  },
-  {
-    book_id: 9,
-    seller_id: 5,
-    title: "Pride and Prejudice",
-    category: "Romance",
-    Author: "Jane Austen",
-    price: 28,
-    book_description: "A classic novel of manners and marriage.",
-    image: "/src/assets/images/H.J.jpg"
-  },
-
-
-
+  // {
+  //   book_id: 5,
+  //   seller_id: 1,
+  //   title: "To Kill a Mockingbird",
+  //   category: "Classic",
+  //   Author: "Jessica Cunsolo",
+  //   price: 30,
+  //   book_description: "To Kill a Mockingbird is a story",
+  //   image: "/src/assets/images/ali.jpg"
+  // },
+  // {
+  //   book_id: 6,
+  //   seller_id: 2,
+  //   title: "1984",
+  //   category: "Dystopian",
+  //   Author: "George Orwell",
+  //   price: 25,
+  //   book_description: "A chilling prophecy about the future.",
+  //   image: "/src/assets/images/anna.jpg"
+  // },
+  // {
+  //   book_id: 7,
+  //   seller_id: 3,
+  //   title: "The Great Gatsby",
+  //   category: "Classic",
+  //   Author: "F. Scott Fitzgerald",
+  //   price: 20,
+  //   book_description: "A novel about the American dream.",
+  //   image: "/src/assets/images/blair.jpg"
+  // },
+  // {
+  //   book_id: 8,
+  //   seller_id: 4,
+  //   title: "The Hobbit",
+  //   category: "Fantasy",
+  //   Author: "J.R.R. Tolkien",
+  //   price: 35,
+  //   book_description: "A fantasy novel about the journey of Bilbo Baggins.",
+  //   image: "/src/assets/images/cupid.jpg"
+  // },
+  // {
+  //   book_id: 9,
+  //   seller_id: 5,
+  //   title: "Pride and Prejudice",
+  //   category: "Romance",
+  //   Author: "Jane Austen",
+  //   price: 28,
+  //   book_description: "A classic novel of manners and marriage.",
+  //   image: "/src/assets/images/H.J.jpg"
+  // },
 ]);
+
+const products = async () => {
+  try {
+    let response = await fetch('http://localhost:3000/books'); // Corrected variable name
+    if (!response.ok) {
+      throw new Error('No data available');
+    }
+    books.value = await response.json();
+  } catch (error) {
+    console.error('Error fetching books:', error);
+  }
+};
+
+products();
+
+const logout = () => {
+  localStorage.removeItem('token');
+  window.location.href = '/login';
+};
 
 const toggleSidebar = () => {
   isSidebarExpanded.value = !isSidebarExpanded.value;
@@ -267,6 +283,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #fcfafa;
+  width: 100vw;
 }
 
 .logo {

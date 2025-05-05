@@ -57,13 +57,14 @@ const handleLogin = async () => {
     router.push('/');
     errorMessages.value = '';
 
-   } catch (erro  r) {
-    if (error.response && error.resp  onse.status === 401) {
-        errorMessages.value   = 'Invalid email or password';
-      } else {
-      errorMess  ages.value = 'An error occurr  ed. Please try again later.';
-          }
-}
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      errorMessages.value = 'Invalid email or password';
+    } else {
+      errorMessages.value = 'An error occurr  ed. Please try again later.';
+    }
+  }
+};
 </script>
 
 <style scoped>

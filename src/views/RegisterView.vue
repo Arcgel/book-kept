@@ -66,13 +66,12 @@ const phone = ref('');
 
 const handleRegister = async () => {
   try {
-    const response = await axios.post('https://example.com/api/register', {
+    const response = await axios.post('http://localhost:3000/register', {
       name: name.value,
       email: email.value,
       password: password.value,
       phone: phone.value
     });
-    localStorage.setItem('token', response.data.token);
     this.$router.push('/login');
     errorMessages.value = '';
   } catch (error) {

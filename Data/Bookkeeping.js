@@ -15,6 +15,11 @@ const db = mysql.createConnection({
   database: 'bookkeeping',
 })
 
+const port = process.env.PORT || 3000
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`)
+})
+
 db.connect((err) => {
   if (err) throw err
   console.log('Connected to MySQL database')

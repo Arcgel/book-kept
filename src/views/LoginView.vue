@@ -40,6 +40,7 @@
 
 import axios from 'axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { errorMessages } from 'vue/compiler-sfc';
 
 const email = ref('');
@@ -48,20 +49,20 @@ const password = ref('');
 
 const handleLogin = async () => {
   try {
-    const response = await axios.post('https://example.com/api/login', {
+    const response = await axios.post('http://localhost:3000/login', {
       email: email.value,
       password: password.value
     });
     localStorage.setItem('token', response.data.token);
-    this.$router.push('/');
+    router.push('/');
     errorMessages.value = '';
-  } catch (error) {
-    if (error.response && error.response.status === 401) {
-      errorMessages.value = 'Invalid email or password';
-    } else {
-      errorMessages.value = 'An error occurred. Please try again later.';
-    }
-  }
+
+   } catch (erro  r) {
+    if (error.response && error.resp  onse.status === 401) {
+        errorMessages.value   = 'Invalid email or password';
+      } else {
+      errorMess  ages.value = 'An error occurr  ed. Please try again later.';
+          }
 }
 </script>
 

@@ -1,20 +1,21 @@
 <template>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.12.1/font/bootstrap-icons.min.css">
   <div id="app">
 
     <!-- Sidebar -->
     <div class="sidebar" :class="{ expanded: isSidebarExpanded }">
-      <i id="toggleSidebar" class="fas fa-bars" @click="toggleSidebar"></i>
+      <i id="toggleSidebar" class="bi bi-justify" @click="toggleSidebar"></i>
       <div class="menu-item">
-        <i class="fas fa-book"></i> <span class="menu-text">Library</span>
+        <i class="bi bi-book-half"></i> <span class="menu-text">Library</span>
       </div>
       <div class="menu-item">
-        <i class="fas fa-layer-group"></i> <span class="menu-text">Categories</span>
+        <i class="bi bi-stack"></i> <span class="menu-text">Categories</span>
       </div>
       <div class="menu-item">
-        <i class="fas fa-shopping-bag"></i> <span class="menu-text">Shop</span>
+        <i class="bi bi-bag-heart-fill"></i> <span class="menu-text">Shop</span>
       </div>
       <div class="menu-item">
-        <i class="fas fa-heart"></i> <span class="menu-text">Wishlist</span>
+        <i class="bi bi-suit-heart-fill"></i> <span class="menu-text">Wishlist</span>
       </div>
     </div>
 
@@ -24,11 +25,11 @@
       <input type="text" v-model="searchQuery" class="form-control" placeholder="Search your Book..." />
       <div class="d-flex gap-4">
         <a href="#" class="text-dark" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
-          <i class="fas fa-shopping-cart fa-lg"></i>
+          <i class="bi bi-cart-fill"></i>
         </a>
         <div class="dropdown">
           <a href="#" class="text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-user fa-lg"></i>
+            <i class="bi bi-person-fill"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li>
@@ -62,7 +63,7 @@
     <div class="main">
       <!-- Hero Section -->
       <div class="d-flex align-items-center justify-content-center gap-5 flex-wrap text-center text-md-start my-5">
-        <img src="../booky.gif" alt="Books" class="hero-img" />
+        <img src="/src/assets/images/book.gif" alt="Books" class="hero-img" />
         <h1 class="fw-bold">
           Get Your New<br />
           <span class="text-danger">Books Collection</span>
@@ -71,7 +72,7 @@
 
       <!-- Tab Navigation -->
       <div class="container">
-        <div class="navbar bg-body-secondary p-2 mb-4 rounded d-flex gap-3 justify-content-center">
+        <div class="navbar bg-body-secondary p-2 mb-4 rounded  gap-3 justify-content-center" >
           <button class="btn btn-sm">Home</button>
           <button class="btn btn-sm">Newer Release</button>
           <button class="btn btn-sm">Top Selling</button>
@@ -82,18 +83,17 @@
         <!-- Featured & Recommended Section -->
         <div class="recommended mt-4">
           <h2 class="mb-3 fs-4 text-dark">Featured and Recommended</h2>
-          <div
-            class="featured-recommended bg-dark text-white rounded overflow-hidden d-flex flex-column flex-md-row mb-4 position-relative"
-            style="min-height: 450px;">
+          <div class="featured-recommended bg-dark text-white rounded overflow-hidden d-flex flex-column flex-md-row mb-4 position-relative" style="min-height: 450px;">
             <!-- Left Arrow -->
-            <button class="btn btn-light position-absolute top-50 start-0 translate-middle-y" style="opacity: 0.7;"
-              @click="prevSlide">
-              <i class="fas fa-chevron-left"></i>
-            </button>
+            <button class="btn btn-light position-absolute top-50 start-0 translate-middle-y"
+  style="opacity: 0.7; z-index: 10;"
+  @click="prevSlide">
+  <i class="bi bi-chevron-left"></i>
+</button>
 
             <div class="col-md-8 p-0 position-relative">
               <img :src="featuredImages[currentIndex].src" :alt="featuredImages[currentIndex].title" class="w-100"
-                style="height: 450px; object-fit: cover;" />
+                style="height: 450px; " />
               <div class="position-absolute bottom-0 start-0 p-3 w-100"
                 style="background: linear-gradient(to left, rgba(49,55,63,0.75), rgba(158,195,228,0.75));">
                 <h5>{{ featuredImages[currentIndex].title }}</h5>
@@ -107,19 +107,17 @@
             </div>
 
             <!-- Right Arrow -->
-            <button class="btn btn-light position-absolute top-50 end-0 translate-middle-y" style="opacity: 0.7;"
-              @click="nextSlide">
-              <i class="fas fa-chevron-right"></i>
+            <button class="btn btn-light position-absolute top-50 end-0 translate-middle-y" style="opacity: 0.7 z-index 10;" @click="nextSlide"> <i class="bi bi-chevron-right"></i>
             </button>
           </div>
         </div>
 
         <!-- New Releases Section -->
         <div class="new-releases mt-3">
-          <h2 class="mb-3 fs-4 text-dark">New Releases</h2>
-          <div class="row d-flex flex-wrap gap-2 justify-content-start">
+          <h2 class="mb-3 fs-4 text-dark" style="font-family: 'Times New Roman', Times, serif;" >New Releases</h2>
+          <div class="row d-flex flex-wrap gap-4 justify-content-start">
             <div class="col-6 col-md-2" v-for="book in books" :key="book.book_id">
-              <div class="card border-2 shadow-sm" style="width: 175px;">
+              <div class="card border-2 shadow-sm" style="width: 200px;">
                 <img :src="book.image" :alt="book.title" class="card-img-top"
                   style="height: 200px; object-fit: cover;" />
                 <div class="card-body">
@@ -132,6 +130,26 @@
             </div>
           </div>
         </div>
+
+        <!-- New Releases Section -->
+        <div class="new-releases mt-3">
+          <h2 class="mb-3 fs-4 text-dark" style="font-family: 'Times New Roman', Times, serif;" >Best Seller</h2>
+          <div class="row d-flex flex-wrap gap-4 justify-content-start">
+            <div class="col-6 col-md-2" v-for="book in books" :key="book.book_id">
+              <div class="card border-2 shadow-sm" style="width: 200px;">
+                <img :src="book.image" :alt="book.title" class="card-img-top"
+                  style="height: 200px; object-fit: cover;" />
+                <div class="card-body">
+                  <p class="card-title fw-semibold mb-0 small text-dark">{{ book.title }}</p>
+                  <p class="card-text small text-muted mb-0">{{ book.category }}</p>
+                  <p class="card-text small text-secondary mb-0">{{ book.Author }}</p>
+                  <p class="card-text small text-secondary mb-0">$ {{ book.price }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
       <!-- End container -->
     </div>
@@ -147,21 +165,22 @@ const searchQuery = ref("");
 
 const featuredImages = ref([
   {
-    src: "/src/assets/images/image1.jpg",
+    src: "/src/assets/images/romance.jpg",
     title: "ROMANCE",
     desc: "Explore top picks in this category. Find the perfect title that suits your taste!"
   },
   {
-    src: "/src/assets/images/image2.jpg",
+    src: "/src/assets/images/adventure.jpg",
     title: "ADVENTURE",
     desc: "Get lost in thrilling journeys through mysterious worlds."
   },
   {
-    src: "/src/assets/images/image3.jpg",
+    src: "/src/assets/images/mystery.jpg",
     title: "MYSTERY",
     desc: "Uncover secrets with our most suspenseful reads."
   }
 ]);
+
 const currentIndex = ref(0);
 
 const books = ref([
@@ -173,9 +192,51 @@ const books = ref([
     Author: "Jessica Cunsolo",
     price: 30,
     book_description: "To Kill a Mockingbird is a story",
-    image: "/src/assets/images/ava.jpg"
-  }
-  // You can add more books following the same structure.
+    image: "/src/assets/images/ali.jpg"
+  },
+  {
+    book_id: 6,
+    seller_id: 2,
+    title: "1984",
+    category: "Dystopian",
+    Author: "George Orwell",
+    price: 25,
+    book_description: "A chilling prophecy about the future.",
+    image: "/src/assets/images/anna.jpg"
+  },
+  {
+    book_id: 7,
+    seller_id: 3,
+    title: "The Great Gatsby",
+    category: "Classic",
+    Author: "F. Scott Fitzgerald",
+    price: 20,
+    book_description: "A novel about the American dream.",
+    image: "/src/assets/images/blair.jpg"
+  },
+  {
+    book_id: 8,
+    seller_id: 4,
+    title: "The Hobbit",
+    category: "Fantasy",
+    Author: "J.R.R. Tolkien",
+    price: 35,
+    book_description: "A fantasy novel about the journey of Bilbo Baggins.",
+    image: "/src/assets/images/cupid.jpg"
+  },
+  {
+    book_id: 9,
+    seller_id: 5,
+    title: "Pride and Prejudice",
+    category: "Romance",
+    Author: "Jane Austen",
+    price: 28,
+    book_description: "A classic novel of manners and marriage.",
+    image: "/src/assets/images/H.J.jpg"
+  },
+  
+
+  
 ]);
 
 const toggleSidebar = () => {
@@ -187,22 +248,23 @@ const nextSlide = () => {
 };
 
 const prevSlide = () => {
-  currentIndex.value =
-    (currentIndex.value - 1 + featuredImages.value.length) % featuredImages.value.length;
+  console.log('Previous slide clicked');
+  currentIndex.value = (currentIndex.value - 1 + featuredImages.value.length) % featuredImages.value.length;
 };
+
 </script>
 
-<style>
-/* Global Styles */
+<style >
+
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Times New Roman', Times, serif;
   margin: 0;
   padding: 0;
   background-color: #fcfafa;
 }
 
 .logo {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Times New Roman', Times, serif;
   font-size: 24px;
   font-weight: bold;
 }
@@ -221,10 +283,9 @@ body {
   left: 0;
   height: 100vh;
   padding-top: 70px;
-  display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 35px;
+  gap: 10px;
   z-index: 1000;
 }
 
@@ -301,17 +362,18 @@ body {
 }
 
 .category-card h5 {
-  font-weight: bold;
+  font-family: 'Times New Roman', Times, serif;
+
 }
 
 .btn:hover {
   transform: scale(1.05);
-  color: red;
+  color: rgb(177, 16, 5);
 }
 
 .navbar {
-  width: 102%;
-  margin-left: 29px;
+  width: 98%;
+  margin-left: 40px;
 }
 
 .sidebar.expanded {
@@ -319,14 +381,15 @@ body {
   align-items: flex-start;
   padding-left: 15px;
   transition: width 0.3s ease;
+  gap: 4px;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   width: 100%;
-  padding: 5px 0;
+  padding: 2px 0;
   border-radius: 5px;
   transition: transform 0.3s ease, background-color 0.3s ease;
   cursor: pointer;
@@ -334,7 +397,7 @@ body {
 
 .menu-item:hover {
   transform: translateY(-3px) scale(1);
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(209, 20, 20, 0.05);
 }
 
 .menu-text {
@@ -349,10 +412,10 @@ body {
 }
 
 #toggleSidebar {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   cursor: pointer;
+  /* margin-right:0px; */
 }
-
 .card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
@@ -378,16 +441,17 @@ body {
 }
 
 .recommended {
-  margin-left: 3%;
+  margin-left: 4%;
   cursor: pointer;
 }
 
 .new-releases {
-  margin-left: 3%;
+  margin-left: 4%;
 }
 
-.fa-lg {
-  font-size: 1.25em;
-  vertical-align: -0.075em;
+.bi {
+  font-size: 1.70em;
+  /* line-height: 2.00em; */
+  vertical-align: -.075em;
 }
 </style>

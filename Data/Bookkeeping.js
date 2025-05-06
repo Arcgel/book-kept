@@ -169,3 +169,89 @@ app.get('/books', (req, res) => {
     res.json(results) // Send the books data as JSON response
   })
 })
+
+app.post('/checkout', authenticateToken, (req, res) => {
+  const userId = req.user.id
+
+  // Fetch items from the cart
+  const fetchCartQuery = `SELECT book_id FROM cart WHERE user_id = ?`
+  db.query(fetchCartQuery, [userId], (err, cartItems) => {
+    if (err) {
+      console.error('Error fetching cart:', err)
+      return res.status(500).json({ message: 'Server error while fetching cart' })
+    }
+
+    if (cartItems.length === 0) {
+      return res.status(400).json({ message: 'Cart is empty' })
+    }
+
+    const bookIds = cartItems.map((item) => item.book_id)
+
+    // Check if user already owns any of these books
+    const checkLibraryQuery = `SELECT book_id FROM library WHERE user_id = ? AND book_id IN (?)`
+    db.query(checkLibraryQuery, [userId, bookIds], (err, ownedBooks) => {
+      if (err) {
+        console.error('Error checking library:', err)
+        return res.status(500).json({ message: 'Server error while checking library' })
+      }
+
+      const ownedBookIds = ownedBooks.map((book) => book.book_id)
+      const booksToPurchase = bookIds.filter((id) => !ownedBookIds.includes(id))
+
+      if (booksToPurchase.length === 0) {
+        return res.status(400).json({ message: 'You already own all books in the cart!' })
+      }
+
+      // Add books to user's library
+      const addToLibraryQuery = `INSERT INTO library (user_id, book_id) VALUES ?`
+      const libraryValues = booksToPurchase.map((id) => [userId, id])
+
+      db.query(addToLibraryQuery, [libraryValues], (err) => {
+        if (err) {
+          console.error('Error adding to library:', err)
+          return res.status(500).json({ message: 'Error adding books to library' })
+        }
+
+        // Remove items from cart
+        const removeCartQuery = `DELETE FROM cart WHERE user_id = ? AND book_id IN (?)`
+        db.query(removeCartQuery, [userId, booksToPurchase], (err) => {
+          if (err) {
+            console.error('Error removing from cart:', err)
+            return res.status(500).json({ message: 'Error removing items from cart' })
+          }
+
+          // Increase sold count in books table
+          const updateSoldQuery = `UPDATE books SET Sales = Sales + 1 WHERE book_id IN (?)`
+          db.query(updateSoldQuery, [booksToPurchase], (err) => {
+            if (err) {
+              console.error('Error updating sold count:', err)
+              return res.status(500).json({ message: 'Error updating book sales count' })
+            }
+
+            res.status(200).json({ message: 'Checkout successful!' })
+          })
+        })
+      })
+    })
+  })
+})
+
+app.get('/library', authenticateToken, (req, res) => {
+  const userId = req.user.id
+
+  const query = `
+    SELECT books.book_id, books.title, books.author, books.category, books.price, books.image
+    FROM library
+    JOIN books ON library.book_id = books.book_id
+    WHERE library.user_id = ?;
+  `
+
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error('Error fetching library:', err)
+      return res.status(500).json({ message: 'Error fetching library' })
+    }
+
+    res.status(200).json(results)
+  })
+})

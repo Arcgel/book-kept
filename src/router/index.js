@@ -39,6 +39,11 @@ const router = createRouter({
       props: true,
       meta: { requiresAuth: true },
     },
+    {
+      path: '/library',
+      name: 'Library',
+      component: () => import('@/views/LibraryView.vue'),
+    },
   ],
 })
 
@@ -56,5 +61,4 @@ router.beforeEach((to, from, next) => {
     next() // Allow access
   }
 })
-
 export default router

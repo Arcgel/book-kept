@@ -5,7 +5,7 @@
     <!-- Sidebar -->
     <div class="sidebar" :class="{ expanded: isSidebarExpanded }">
       <i id="toggleSidebar" class="bi bi-justify" @click="toggleSidebar"></i>
-      <div class="menu-item">
+      <div class="menu-item" @click="Library">
         <i class="bi bi-book-half"></i> <span class="menu-text">Library</span>
       </div>
       <div class="menu-item">
@@ -25,7 +25,7 @@
       <input type="text" v-model="searchQuery" class="form-control" placeholder="Search your Book..." />
       <div class="d-flex gap-4">
         <a href="#" class="text-dark" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
-          <i class="bi bi-cart-fill"></i>
+          <i class="bi bi-cart-fill" @click="cart"></i>
         </a>
         <div class="dropdown">
           <a href="#" class="text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -274,6 +274,12 @@ const prevSlide = () => {
 
 const opnBookView = (book) => {
   router.push({ name: "BookView", params: { bookData: JSON.stringify(book) } })
+};
+const cart = () => {
+  router.push({ name: "Cart" });
+};
+const Library = () => {
+  router.push({ name: "Library" });
 };
 
 </script>

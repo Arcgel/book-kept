@@ -21,7 +21,6 @@
               </div>
             </td>
             <td>${{ parseFloat(item.price).toLocaleString(undefined, { minimumFractionDigits: 2 }) }}</td>
-            <!-- <td><input type="number" value="1" min="1" /></td> -->
             <td>${{ parseFloat(item.price).toLocaleString(undefined, { minimumFractionDigits: 2 }) }}</td>
           </tr>
         </tbody>
@@ -30,10 +29,10 @@
       <div class="cart-totals-inline" v-if="cartItems.length">
         <h3>Cart totals</h3>
         <div class="totals">
-          <div><span>Subtotal</span><span>$4,000.00</span></div>
-          <div><span>Total</span><span>$4,000.00</span></div>
+          <div><span>Subtotal</span><span>$ {{ totalprice }}</span></div>
+          <div><span>Total</span><span>$ {{ totalprice }}</span></div>
         </div>
-        <button class="checkout">Proceed to checkout</button>
+        <button class="checkout" @click="checkout">Proceed to checkout</button>
       </div>
     </div>
   </div>
@@ -41,7 +40,7 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 
 const cartItems = ref([]);
@@ -66,12 +65,40 @@ const fetchCart = async () => {
   }
 };
 
+const totalprice = computed(() => {
+  return cartItems.value.reduce((sum, item) => sum + parseFloat(item.price), 0).toLocaleString(undefined, { minimumFractionDigits: 2 });
+});
+
+const checkout = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please log in first.");
+      return;
+    }
+
+    const response = await axios.post("http://localhost:3000/checkout", {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    console.log("Checkout Response:", response.data);
+    alert(response.data.message);
+
+    // Refresh cart after checkout to reflect changes
+    fetchCart();
+  } catch (error) {
+    console.error("Checkout error:", error);
+    alert("Failed to complete checkout.");
+  }
+};
+
 // Fetch cart when component is mounted
 onMounted(fetchCart);
 </script>
 
-<style scoped>
 
+
+<style scoped>
 .cart-container {
   /* max-width: 1000px; */
   margin: auto;
@@ -86,16 +113,19 @@ h1 {
   margin-bottom: 20px;
   margin-left: 40px;
 }
+
 .cart-main {
   display: flex;
-  gap: 80px; /* or even 100px */
+  gap: 80px;
+  /* or even 100px */
   align-items: flex-start;
 
 }
+
 .cart-table {
   width: 100%;
-  border-collapse: collapse; 
-  gap:50px;
+  border-collapse: collapse;
+  gap: 50px;
 }
 
 .cart-table th,
@@ -126,7 +156,7 @@ h1 {
 
 input[type="number"] {
   width: 50px;
-  padding: 6px; 
+  padding: 6px;
   font-size: 14px;
   text-align: center;
 }
@@ -144,6 +174,7 @@ input[type="number"] {
   font-size: 26px;
   margin-bottom: 12px;
 }
+
 .cart-totals-inline {
   flex-shrink: 0;
   min-width: 240px;
@@ -151,11 +182,11 @@ input[type="number"] {
 }
 
 .cart-totals-inline .totals {
-   display: flex;
+  display: flex;
   flex-direction: column;
   gap: 8px;
   font-weight: bold;
-  margin-bottom: 12px; 
+  margin-bottom: 12px;
 }
 
 .cart-totals-inline .totals div {
@@ -175,6 +206,7 @@ input[type="number"] {
 .cart-totals-inline .checkout:hover {
   opacity: 0.9;
 }
+
 @media (max-width: 768px) {
   .cart-main {
     flex-direction: column;
@@ -185,6 +217,4 @@ input[type="number"] {
     align-self: flex-start;
   }
 }
-
-
 </style>

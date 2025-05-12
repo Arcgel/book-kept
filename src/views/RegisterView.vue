@@ -16,7 +16,8 @@
             <!-- Email -->
             <div class="mb-3 position-relative">
               <i class="bi bi-envelope position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-              <input type="text" class="form-control ps-5 border rounded" v-model="email" placeholder="Email" />
+              <input type="text" class="form-control ps-5 border rounded" v-model="email" placeholder="Email"
+                @input="validateLetters($event)" />
             </div>
 
             <!-- Password -->
@@ -39,7 +40,8 @@
           </form>
           <div class="text-center my-3 text-muted" style="font-family: Times New Roman, Times, serif;">or</div>
 
-          <p class="text-center link" style="font-family:'Times New Roman', Times, serif;">  If you already have an account
+          <p class="text-center link" style="font-family:'Times New Roman', Times, serif;"> If you already have an
+            account
             <a href="#" class="sign-in" style="font-family: Times New Roman, Times, serif;"
               @click="$router.push('/login')">Sign in</a>
           </p>
@@ -64,6 +66,17 @@ const email = ref('');
 const password = ref('');
 const phone = ref('');
 const errorMessages = ref('');
+
+const validateLetters = (event) => {
+  const originalValue = event.target.value;
+  const filteredValue = originalValue.replace(/[^a-zA-Z]/g, '');
+
+  if (originalValue !== filteredValue) {
+    alert("Only letters are allowed!");
+  }
+
+  event.target.value = filteredValue;
+}
 
 const handleRegister = async () => {
   try {

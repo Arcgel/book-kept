@@ -255,3 +255,36 @@ app.get('/library', authenticateToken, (req, res) => {
     res.status(200).json(results)
   })
 })
+
+app.get('/seller-books', authenticateToken, (req, res) => {
+  const sellerId = req.user.id // Get seller ID from JWT
+
+  const query = `SELECT * FROM books WHERE sellerid = ?`
+  db.query(query, [sellerId], (err, results) => {
+    if (err) {
+      console.error('Error fetching seller books:', err)
+      return res.status(500).json({ message: 'Error fetching books' })
+    }
+
+    res.status(200).json(results)
+  })
+})
+
+app.post('/books', authenticateToken, (req, res) => {
+  const { title, author, description, category, price, image } = req.body
+  const sellerId = req.user.id // Extract seller ID from token
+
+  if (!title || !author || !price) {
+    return res.status(400).json({ message: 'Title, author, and price are required' })
+  }
+
+  const query =
+    'INSERT INTO books (title, author, book_description, category, price, image, sellerid) VALUES (?, ?, ?, ?, ?, ?, ?)'
+  db.query(query, [title, author, description, category, price, image, sellerId], (err) => {
+    if (err) {
+      console.error('Error adding book:', err)
+      return res.status(500).json({ message: 'Error adding book' })
+    }
+    res.status(201).json({ message: 'Book added successfully' })
+  })
+})

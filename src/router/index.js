@@ -44,6 +44,11 @@ const router = createRouter({
       name: 'Library',
       component: () => import('@/views/LibraryView.vue'),
     },
+    {
+      path: '/SellerDash',
+      name: 'SellerDash',
+      component: () => import('@/views/SellerDashView.vue'),
+    },
   ],
 })
 

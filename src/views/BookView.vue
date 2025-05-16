@@ -13,7 +13,9 @@
 
       <div class="quantity-cart">
         <button class="add-to-cart" @click="addToCart">Add to cart</button>
-        <button class="icon-btn"><i class="fas fa-heart"></i></button>
+        <button class="icon-btn" :class="{ wishlisted: isWishlisted }" @click="toggleWishlist">
+          <i class="fas fa-heart"></i>
+        </button>
       </div>
 
       <div class="tabs">
@@ -29,22 +31,48 @@
       </div>
     </div>
   </div>
-
-
 </template>
-
 
 <script setup>
 import { useRoute } from "vue-router";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 
 const route = useRoute();
 const book = ref(JSON.parse(route.params.bookData));
+const isWishlisted = ref(false);
+
+// 📌 Check if the book is wishlisted
+const checkWishlist = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(`http://localhost:3000/wishlist/${book.value.book_id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    isWishlisted.value = response.data.isWishlisted;
+  } catch (error) {
+    console.error("Error checking wishlist:", error);
+  }
+};
+
+// 📌 Toggle wishlist status
+const toggleWishlist = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    await axios.post(
+      "http://localhost:3000/wishlist",
+      { book_id: book.value.book_id },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    isWishlisted.value = !isWishlisted.value;
+  } catch (error) {
+    console.error("Error toggling wishlist:", error);
+  }
+};
 
 const addToCart = async () => {
   try {
-    const token = localStorage.getItem("token"); // Retrieve JWT token from localStorage
+    const token = localStorage.getItem("token");
     if (!token) {
       alert("Please log in first.");
       return;
@@ -60,7 +88,10 @@ const addToCart = async () => {
     alert("Failed to add book to cart.");
   }
 };
+
+onMounted(checkWishlist);
 </script>
+
 
 <style scoped>
 body {
@@ -282,5 +313,21 @@ body {
 .rating {
   font-size: 0.85rem;
   color: #f39c12;
+}
+
+.icon-btn.wishlisted {
+  color: red;
+  transform: scale(1.2);
+  animation: float 0.7s infinite alternate;
+}
+
+@keyframes float {
+  0% {
+    transform: scale(1.2) translateY(-3px);
+  }
+
+  100% {
+    transform: scale(1.3) translateY(0px);
+  }
 }
 </style>

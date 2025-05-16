@@ -29,17 +29,20 @@
                 <td>{{ book.author }}</td>
                 <td>{{ book.description }}</td>
                 <td>
-                  <button class="btn btn-sm btn-warning me-1"><i class="bi bi-pencil-square"></i></button>
-                  <button class="btn btn-sm btn-danger" @click="deleteBook(book.book_id)"><i
-                      class="bi bi-trash"></i></button>
+                  <button class="btn btn-sm btn-warning me-1" @click="openEditModal(book)">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" @click="deleteBook(book.book_id)">
+                    <i class="bi bi-trash"></i>
+                  </button>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <!-- ✅ Correctly Pass Modal Visibility & Event Handling -->
         <AddBooksModal :showModal="showModal" @closeModal="showModal = false" />
+        <EditBooksModal :showModal="showEditModal" :bookToEdit="bookToEdit" @closeModal="showEditModal = false" />
       </div>
     </div>
   </div>
@@ -49,9 +52,12 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import AddBooksModal from '@/components/AddBooksModal.vue';
+import EditBooksModal from '@/components/EditBooksModal.vue';
 
 const books = ref([]);
 const showModal = ref(false);
+const showEditModal = ref(false);
+const bookToEdit = ref(null);
 
 const fetchSellerBooks = async () => {
   try {
@@ -74,6 +80,26 @@ const fetchSellerBooks = async () => {
 
 const showAddBookModal = () => {
   showModal.value = true;
+};
+
+const openEditModal = (book) => {
+  bookToEdit.value = book;
+  showEditModal.value = true;
+};
+
+const deleteBook = async (bookId) => {
+  try {
+    const token = localStorage.getItem("token");
+    await axios.delete(`http://localhost:3000/books/${bookId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    books.value = books.value.filter(book => book.book_id !== bookId);
+    alert("Book deleted successfully!");
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    alert("Failed to delete book.");
+  }
 };
 
 onMounted(fetchSellerBooks);

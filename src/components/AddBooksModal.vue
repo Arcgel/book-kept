@@ -5,7 +5,7 @@
         <h5>Add New Book</h5>
         <input v-model="newBook.title" placeholder="Title" class="form-control mb-2" />
         <input v-model="newBook.author" placeholder="Author" class="form-control mb-2" />
-        <input v-model="newBook.description" placeholder="Description" class="form-control mb-2" />
+        <textarea v-model="newBook.description" placeholder="Description" class="form-control mb-2" />
         <input v-model="newBook.category" placeholder="Category" class="form-control mb-2" />
         <input v-model="newBook.price" placeholder="Price" type="number" class="form-control mb-2" />
         <input v-model="newBook.image" placeholder="Image URL" class="form-control mb-2" />

@@ -10,21 +10,22 @@
             <!-- Name -->
             <div class="mb-3 position-relative">
               <i class="bi bi-person position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-              <input type="text" class="form-control ps-5 border rounded" v-model="name" placeholder="Name" />
+              <input type="text" class="form-control ps-5 border rounded" v-model="name" placeholder="Name"
+                @input="validateName" required />
             </div>
 
             <!-- Email -->
             <div class="mb-3 position-relative">
               <i class="bi bi-envelope position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
               <input type="text" class="form-control ps-5 border rounded" v-model="email" placeholder="Email"
-                @input="validateLetters($event)" />
+                @input="validateLetters" required />
             </div>
 
             <!-- Password -->
             <div class="mb-3 position-relative">
               <i class="bi bi-lock position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-              <input type="password" class="form-control ps-5 border rounded" v-model="password"
-                placeholder="Password" />
+              <input type="password" class="form-control ps-5 border rounded" v-model="password" placeholder="Password"
+                required />
             </div>
 
             <!-- Phone -->
@@ -60,26 +61,45 @@ import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-const router = useRouter(); // Vue Router instance
+const router = useRouter();
 const name = ref('');
 const email = ref('');
 const password = ref('');
 const phone = ref('');
 const errorMessages = ref('');
 
+// Validate name field: Remove numbers/spaces AND prevent empty input
+const validateName = (event) => {
+  const filteredValue = event.target.value.replace(/[^a-zA-Z]/g, ''); // Remove numbers and spaces
+  event.target.value = filteredValue;
+  name.value = filteredValue;
+
+  if (!name.value) {
+    alert("Invalid input! Name must contain at least one letter.");
+    return;
+  }
+};
+
 const validateLetters = (event) => {
   const originalValue = event.target.value;
-  const filteredValue = originalValue.replace(/[^a-zA-Z]/g, '');
+  const filteredValue = originalValue.replace(/[^a-zA-Z0-9@.]/g, '');
 
   if (originalValue !== filteredValue) {
-    alert("Only letters are allowed!");
+    alert("Only letters, numbers, @, and . are allowed!");
   }
-
   event.target.value = filteredValue;
-}
+};
 
 const handleRegister = async () => {
   try {
+    name.value = name.value.replace(/[^a-zA-Z]/g, '');
+
+    // Stop registration if name is empty after filtering
+    if (!name.value) {
+      alert("Invalid input! Name must contain at least one letter.");
+      return; // Prevents submission
+    }
+
     const response = await axios.post('http://localhost:3000/register', {
       name: name.value,
       email: email.value,
@@ -88,7 +108,7 @@ const handleRegister = async () => {
     });
 
     errorMessages.value = '';
-    router.push('/login'); // Corrected routing method
+    router.push('/login');
 
   } catch (error) {
     if (error.response) {
@@ -98,7 +118,7 @@ const handleRegister = async () => {
           break;
         case 401:
           errorMessages.value = 'Unauthorized access. Redirecting to login...';
-          router.push('/login'); // Redirect user immediately
+          router.push('/login');
           break;
         case 409:
           errorMessages.value = 'This email is already registered. Try logging in instead.';
@@ -112,7 +132,6 @@ const handleRegister = async () => {
   }
 };
 </script>
-
 
 <style scoped>
 body,
@@ -175,13 +194,10 @@ html {
   border-color: #ccc;
   box-shadow: none;
   outline: none;
-
 }
 
 .create {
   font-size: 20px;
   font-weight: bold;
-
-
 }
 </style>

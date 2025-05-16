@@ -35,7 +35,7 @@
             <li>
               <h6 class="dropdown-header">Mcflurry</h6>
             </li>
-            <li><a class="dropdown-item" href="#">My Profile</a></li>
+            <li><router-link class="dropdown-item" to="/Sellerdash">My Profile</router-link></li>
             <li><a class="dropdown-item" href="#">My Library</a></li>
             <li>
               <hr class="dropdown-divider" />

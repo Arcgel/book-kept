@@ -288,3 +288,78 @@ app.post('/books', authenticateToken, (req, res) => {
     res.status(201).json({ message: 'Book added successfully' })
   })
 })
+
+app.put('/books/:id', authenticateToken, (req, res) => {
+  const bookId = req.params.id
+  const sellerId = req.user.id
+  const { title, author, book_description, category, price, image } = req.body
+
+  const query = `UPDATE books SET title=?, author=?, book_description=?, category=?, price=?, image=? WHERE book_id=? AND sellerid=?`
+  db.query(
+    query,
+    [title, author, book_description, category, price, image, bookId, sellerId],
+    (err, results) => {
+      if (err) {
+        console.error('Error updating book:', err)
+        return res.status(500).json({ message: 'Error updating book' })
+      }
+      res.status(200).json({ message: 'Book updated successfully' })
+    },
+  )
+})
+
+app.delete('/books/:id', authenticateToken, (req, res) => {
+  const bookId = req.params.id
+  const sellerId = req.user.id
+
+  const query = `DELETE FROM books WHERE book_id=? AND sellerid=?`
+  db.query(query, [bookId, sellerId], (err, results) => {
+    if (err) {
+      console.error('Error deleting book:', err)
+      return res.status(500).json({ message: 'Error deleting book' })
+    }
+    res.status(200).json({ message: 'Book deleted successfully' })
+  })
+})
+
+app.post('/wishlist', authenticateToken, (req, res) => {
+  const { book_id } = req.body
+  const userId = req.user.id
+
+  const checkQuery = `SELECT * FROM wishlist WHERE user_id = ? AND book_id = ?`
+  db.query(checkQuery, [userId, book_id], (err, results) => {
+    if (err) {
+      console.error('Error checking wishlist:', err)
+      return res.status(500).json({ message: 'Error processing wishlist' })
+    }
+
+    if (results.length > 0) {
+      const removeQuery = `DELETE FROM wishlist WHERE user_id = ? AND book_id = ?`
+      db.query(removeQuery, [userId, book_id], (err) => {
+        if (err) return res.status(500).json({ message: 'Error removing from wishlist' })
+        return res.status(200).json({ message: 'Removed from wishlist' })
+      })
+    } else {
+      const addQuery = `INSERT INTO wishlist (user_id, book_id) VALUES (?, ?)`
+      db.query(addQuery, [userId, book_id], (err) => {
+        if (err) return res.status(500).json({ message: 'Error adding to wishlist' })
+        return res.status(201).json({ message: 'Added to wishlist' })
+      })
+    }
+  })
+})
+
+// 📌 Check Wishlist Status
+app.get('/wishlist/:book_id', authenticateToken, (req, res) => {
+  const bookId = req.params.book_id
+  const userId = req.user.id
+
+  const query = `SELECT * FROM wishlist WHERE user_id = ? AND book_id = ?`
+  db.query(query, [userId, bookId], (err, results) => {
+    if (err) {
+      console.error('Error checking wishlist:', err)
+      return res.status(500).json({ message: 'Error fetching wishlist status' })
+    }
+    res.status(200).json({ isWishlisted: results.length > 0 })
+  })
+})
